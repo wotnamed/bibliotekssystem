@@ -40,11 +40,21 @@ public class View {
         frame.add(panel);
         frame.setVisible(true);
 
+        // load authentication
+        Authenticator auth = new Authenticator();
+
         loginButton.addActionListener(e -> {
-            frame.getContentPane().removeAll();
-            createSearchView(frame);
-            frame.revalidate();
-            frame.repaint();
+            System.out.println("User: "+usernameField.getText());
+            System.out.println("Very-secure password: "+passwordField.getText());
+
+            if (auth.authCheck(usernameField.getText(), passwordField.getText())) {
+                frame.getContentPane().removeAll();
+                createSearchView(frame);
+                frame.revalidate();
+                frame.repaint();
+            } else {
+                System.out.println("Invalid username or password!");
+            }
         });
     }
 
