@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.lang.reflect. *;
+import java.io.*;
 
 public class Main {
 
@@ -73,12 +75,8 @@ public class Main {
         JPanel boxesContainer = new JPanel();
         boxesContainer.setLayout(new BoxLayout(boxesContainer, BoxLayout.Y_AXIS));
 
-        // Add three titled boxes
-        boxesContainer.add(createSampleBox("Results Box 1"));
-        boxesContainer.add(Box.createRigidArea(new Dimension(0, 15)));
-        boxesContainer.add(createSampleBox("Results Box 2"));
-        boxesContainer.add(Box.createRigidArea(new Dimension(0, 15)));
-        boxesContainer.add(createSampleBox("Results Box 3"));
+        // Add titled boxes
+        //Todo: use addTitledBoxesForAllBooksInList() with library books
 
         JScrollPane scrollPane = new JScrollPane(boxesContainer);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -89,21 +87,32 @@ public class Main {
         frame.add(panel);
     }
 
-    private JPanel createSampleBox(String title) {
+    private JPanel createSampleBox(Book book) {
+        Class<?> thisBook = Book.class;
+        Method[] methods = thisBook.getDeclaredMethods();
         JPanel boxPanel = new JPanel();
         boxPanel.setLayout(new BoxLayout(boxPanel, BoxLayout.Y_AXIS));
-        boxPanel.setBorder(BorderFactory.createTitledBorder(title));
-
-        boxPanel.add(new JLabel("Sample Line 1 Sample Line 1 Sample Line 1 Sample Line 1" ));
-        boxPanel.add(new JLabel("Sample Line 2"));
-        boxPanel.add(new JLabel("Sample Line 3"));
-        boxPanel.add(new JLabel("Sample Line 4"));
-        boxPanel.add(new JLabel("Sample Line 5"));
-
+        boxPanel.setBorder(BorderFactory.createTitledBorder(book.getTitle()));
+        for (Method method : methods){
+            if (method.getName().startsWith("get") && method.getParameterCount() == 0) {
+                try {
+                    Object returnValue = method.invoke(book);
+                    boxPanel.add(new JLabel(String.valueOf(returnValue)));
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
         return boxPanel;
     }
 
-    // Utility to horizontally center components
+    private void addTitledBoxesForAllBooksInList(Book[] bookList, JPanel boxesContainer){
+        for(Book book : bookList){
+        boxesContainer.add(createSampleBox(book));
+        boxesContainer.add(Box.createRigidArea(new Dimension(0, 15)));}
+    }
+
     private Component centerComponent(Component comp) {
         JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.CENTER));
         wrapper.add(comp);
