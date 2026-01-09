@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Loader {
@@ -21,12 +22,14 @@ public class Loader {
         return new Book(title, author, pages, language, year, ISBN);
     }
 
-    public Book[] loadData(){
+    public ArrayList<Book> loadData(){
+        ArrayList<Book> bookList = new ArrayList<>();
         while (scanner.hasNextLine()){
             String bookInformation = scanner.nextLine();
             String[] splitData = bookInformation.split("\\|");
-            // TODO lägg till bookMaker(splitData); i lista och returnera lista
+            bookList.add(bookMaker(splitData));
 
         }
+        return bookList;
     }
 }
