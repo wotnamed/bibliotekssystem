@@ -2,11 +2,21 @@ import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect. *;
 import java.io.*;
+import java.util.ArrayList;
 
 public class Main {
+    Library library = new Library();
+    public Main() throws FileNotFoundException {
+    }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new Main().createLoginView());
+        SwingUtilities.invokeLater(() -> {
+            try {
+                new Main().createLoginView();
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     private void createLoginView() {
@@ -78,14 +88,22 @@ public class Main {
         JPanel boxesContainer = new JPanel();
         boxesContainer.setLayout(new BoxLayout(boxesContainer, BoxLayout.Y_AXIS));
 
-        // Add titled boxes
-        //Todo: use addTitledBoxesForAllBooksInList() with library books
+        addTitledBoxesForBookInList(library.getBooklist(), boxesContainer);
 
         JScrollPane scrollPane = new JScrollPane(boxesContainer);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
         panel.add(topPanel, BorderLayout.NORTH);
         panel.add(scrollPane, BorderLayout.CENTER);
+
+        // Search method thank you!
+        searchButton.addActionListener(e -> {
+            boxesContainer.removeAll();
+            addTitledBoxesForBookInList(library.searchForBook(searchField.getText()), boxesContainer);
+            frame.revalidate();
+            frame.repaint();
+        }
+        );
 
         frame.add(panel);
     }
@@ -110,7 +128,7 @@ public class Main {
         return boxPanel;
     }
 
-    private void addTitledBoxesForAllBooksInList(Book[] bookList, JPanel boxesContainer){
+    private void addTitledBoxesForBookInList(ArrayList<Book> bookList, JPanel boxesContainer){
         for(Book book : bookList){
         boxesContainer.add(createSampleBox(book));
         boxesContainer.add(Box.createRigidArea(new Dimension(0, 15)));}

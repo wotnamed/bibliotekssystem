@@ -3,12 +3,12 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Loader {
-    String path = "C:\\Users\\07arvhav\\IdeaProjects\\bibliotekssystem\\source\\src\\books_the_library_system.txt";
+public class FileManager {
+    String path = "C:\\Users\\07arvhav\\IdeaProjects\\bibliotekssystem\\resources\\books_the_library_system.txt";
     File file = new File(path);
     Scanner scanner = new Scanner(file);
 
-    public Loader() throws FileNotFoundException {
+    public FileManager() throws FileNotFoundException {
     }
 
     public Book bookMaker(String[] bookList){
