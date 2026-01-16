@@ -50,16 +50,19 @@ public class Main {
             System.out.println("Very-secure password: "+passwordField.getText());
 
             if (auth.authCheck(usernameField.getText(), passwordField.getText())) {
-                frame.getContentPane().removeAll();
-                createSearchView(frame);
-                frame.revalidate();
-                frame.repaint();
+                transitionSearchView(frame);
             } else {
                 System.out.println("Invalid username or password!");
             }
         });
     }
 
+    private void transitionSearchView(JFrame frame){
+        frame.getContentPane().removeAll();
+        createSearchView(frame);
+        frame.revalidate();
+        frame.repaint();
+    }
     private void createSearchView(JFrame frame) {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
