@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Loader {
-    String path = "src/books_the_library_system.txt";
+    String path = "C:\\Users\\07arvhav\\IdeaProjects\\bibliotekssystem\\source\\src\\books_the_library_system.txt";
     File file = new File(path);
     Scanner scanner = new Scanner(file);
 
@@ -19,7 +19,7 @@ public class Loader {
         String year = bookList[4].substring(bookList[4].indexOf(":"));
         String ISBN = bookList[5].substring(bookList[5].indexOf(":"));
 
-        return new Book(title, author, pages, language, year, ISBN);
+        return new Book(author, year, language, ISBN, title, pages);
     }
 
     public ArrayList<Book> loadData(){
