@@ -6,8 +6,11 @@ import java.nio.file.Paths; // thanks Lukas1!!!11!!
 
 public class FileManager {
     private static String basePath = Paths.get("").toAbsolutePath().toString() + "\\" + "/resources/";
-    private static String path = basePath + "books_the_library_system.txt";
-    File file = new File(path);
+    // TODO check if toString() in line above is necessary or not
+    private static String booksPath = basePath + "books_the_library_system.txt";
+    private static String loansPath = basePath + "loans.txt";
+    private static String usersPath = basePath + "users.txt";
+    File file = new File(booksPath);
     Scanner scanner = new Scanner(file);
 
     public FileManager() throws FileNotFoundException {
