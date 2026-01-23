@@ -76,6 +76,7 @@ public class Main {
     private void createSearchView(JFrame frame) {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
+        frame.setTitle("Search");
 
         // Top search bar
         JPanel topPanel = new JPanel();
@@ -83,6 +84,10 @@ public class Main {
         JButton searchButton = new JButton("Search");
         topPanel.add(searchField);
         topPanel.add(searchButton);
+
+        // garbage search button
+        JButton myLoansButton = new JButton("My loans");
+        topPanel.add(myLoansButton);
 
         // Center scrollable area for the 3 boxes
         JPanel boxesContainer = new JPanel();
@@ -106,6 +111,14 @@ public class Main {
         );
 
         frame.add(panel);
+
+        //???
+        myLoansButton.addActionListener(e -> {
+            frame.getContentPane().removeAll();
+            createLoanView(frame);
+            frame.revalidate();
+            frame.repaint();
+        });
     }
 
     private JPanel createSampleBox(Book book) {
@@ -114,7 +127,9 @@ public class Main {
         JPanel boxPanel = new JPanel();
         boxPanel.setLayout(new BoxLayout(boxPanel, BoxLayout.Y_AXIS));
         boxPanel.setBorder(BorderFactory.createTitledBorder(book.getTitle()));
-        for (Method method : methods){
+        //         panel.setPreferredSize(new Dimension(300, 200));
+        boxPanel.add(new JLabel("------------------------------------------------------------"));
+        /*for (Method method : methods){
             if (method.getName().startsWith("get") && method.getParameterCount() == 0) {
                 try {
                     Object returnValue = method.invoke(book);
@@ -124,7 +139,14 @@ public class Main {
                     e.printStackTrace();
                 }
             }
-        }
+        }*/ //legacy code by Mr Ragebait the Second
+        boxPanel.add(new JLabel("Year: " + book.getYear()));
+        boxPanel.add(new JLabel("Author: " + book.getAuthor()));
+        boxPanel.add(new JLabel("Title: " + book.getTitle()));
+        boxPanel.add(new JLabel("Language: " + book.getLanguage()));
+        boxPanel.add(new JLabel("Pages: " + book.getPages()));
+        boxPanel.add(new JLabel("ISBN: " + book.getISBN()));
+        boxPanel.add(new JLabel("------------------------------------------------------------"));
         return boxPanel;
     }
 
@@ -138,5 +160,45 @@ public class Main {
         JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.CENTER));
         wrapper.add(comp);
         return wrapper;
+    }
+
+    private void createLoanView(JFrame frame){
+        JPanel loanPanel = new JPanel();
+        loanPanel.setLayout(new BorderLayout());
+
+        JPanel headerPanel = new JPanel();
+        JLabel titleText = new JLabel();
+        titleText.setText("My Loans");
+        frame.setTitle("Loans");
+
+        headerPanel.add(titleText);
+        JButton homePageButton = new JButton("Home");
+        headerPanel.add(homePageButton);
+
+        JPanel boxesContainer = new JPanel();
+        boxesContainer.setLayout(new BoxLayout(boxesContainer, BoxLayout.Y_AXIS));
+
+        Book defaultBook = new Book("", "", "", "", "", "");
+        // Add three titled boxes
+        boxesContainer.add(createSampleBox(defaultBook));
+        boxesContainer.add(Box.createRigidArea(new Dimension(0, 15)));
+        boxesContainer.add(createSampleBox(defaultBook));
+        boxesContainer.add(Box.createRigidArea(new Dimension(0, 15)));
+        boxesContainer.add(createSampleBox(defaultBook));
+
+        JScrollPane scrollPane = new JScrollPane(boxesContainer);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+        loanPanel.add(headerPanel, BorderLayout.NORTH);
+        loanPanel.add(scrollPane, BorderLayout.CENTER);
+
+        frame.add(loanPanel);
+
+        homePageButton.addActionListener(e -> {
+            frame.getContentPane().removeAll();
+            createSearchView(frame);
+            frame.revalidate();
+            frame.repaint();
+        });
     }
 }
