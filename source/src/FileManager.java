@@ -2,9 +2,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.nio.file.Paths; // thanks Lukas1!!!11!!
 
 public class FileManager {
-    String path = "C:\\Users\\07arvhav\\IdeaProjects\\bibliotekssystem\\resources\\books_the_library_system.txt";
+    private static String basePath = Paths.get("").toAbsolutePath().toString() + "\\" + "/resources/";
+    private static String path = basePath + "books_the_library_system.txt";
     File file = new File(path);
     Scanner scanner = new Scanner(file);
 
