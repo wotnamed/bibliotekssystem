@@ -129,7 +129,7 @@ public class Main {
         boxPanel.setBorder(BorderFactory.createTitledBorder(book.getTitle()));
         //         panel.setPreferredSize(new Dimension(300, 200));
         boxPanel.add(new JLabel("------------------------------------------------------------"));
-        for (Method method : methods){
+        /*for (Method method : methods){
             if (method.getName().startsWith("get") && method.getParameterCount() == 0) {
                 try {
                     Object returnValue = method.invoke(book);
@@ -139,7 +139,13 @@ public class Main {
                     e.printStackTrace();
                 }
             }
-        }
+        }*/ //legacy code by Mr Ragebait the Second
+        boxPanel.add(new JLabel("Year: " + book.getYear()));
+        boxPanel.add(new JLabel("Author: " + book.getAuthor()));
+        boxPanel.add(new JLabel("Title: " + book.getTitle()));
+        boxPanel.add(new JLabel("Language: " + book.getLanguage()));
+        boxPanel.add(new JLabel("Pages: " + book.getPages()));
+        boxPanel.add(new JLabel("ISBN: " + book.getISBN()));
         boxPanel.add(new JLabel("------------------------------------------------------------"));
         return boxPanel;
     }
