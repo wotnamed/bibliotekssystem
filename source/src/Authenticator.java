@@ -5,7 +5,7 @@ public class Authenticator {
     private ArrayList<User> userlist = new ArrayList<User>();
 
     public Authenticator(){
-        this.userlist.add(new User("f", "f", new ArrayList<String>()));
+        this.userlist.add(new User("f", "f"));
         System.out.println(userlist);
     }
 

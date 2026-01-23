@@ -147,6 +147,16 @@ public class Main {
         boxPanel.add(new JLabel("Pages: " + book.getPages()));
         boxPanel.add(new JLabel("ISBN: " + book.getISBN()));
         boxPanel.add(new JLabel("------------------------------------------------------------"));
+
+        JPanel buttonPanel = new JPanel();
+        // boxPanel.setLayout(new BoxLayout(boxPanel, BoxLayout.Y_AXIS));
+
+        JButton borrowButton = new JButton("Borrow");
+        buttonPanel.add(borrowButton);
+        JButton returnButton = new JButton("Return");
+        buttonPanel.add(returnButton);
+        boxPanel.add(buttonPanel);
+
         return boxPanel;
     }
 
