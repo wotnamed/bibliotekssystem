@@ -1,37 +1,82 @@
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.nio.file.Paths; // thanks Lukas1!!!11!!
 
 public class FileManager {
-    private static String basePath = Paths.get("").toAbsolutePath().toString() + "\\" + "/resources/";
-    private static String path = basePath + "books_the_library_system.txt";
-    File file = new File(path);
-    Scanner scanner = new Scanner(file);
+    private static final String basePath = Paths.get("").toAbsolutePath() + File.separator + "resources" + File.separator;
+    private static final String bookPath = basePath + "books_the_library_system.txt";
+    private static final String userPath = basePath + "users.txt";
+    private static final String loanPath = basePath + "loans.txt";
 
     public FileManager() throws FileNotFoundException {
     }
 
     public Book bookMaker(String[] bookList){
-        String title = bookList[0].substring(bookList[0].indexOf(":"));
-        String author = bookList[1].substring(bookList[1].indexOf(":"));
-        String pages = bookList[2].substring(bookList[2].indexOf(":"));
-        String language = bookList[3].substring(bookList[3].indexOf(":"));
-        String year = bookList[4].substring(bookList[4].indexOf(":"));
-        String ISBN = bookList[5].substring(bookList[5].indexOf(":"));
+        String title = bookList[0].substring(bookList[0].indexOf(":") + 1).trim();
+        String author = bookList[1].substring(bookList[1].indexOf(":") + 1).trim();
+        String pages = bookList[2].substring(bookList[2].indexOf(":") + 1).trim();
+        String language = bookList[3].substring(bookList[3].indexOf(":") + 1).trim();
+        String year = bookList[4].substring(bookList[4].indexOf(":") + 1).trim();
+        String ISBN = bookList[5].substring(bookList[5].indexOf(":") + 1).trim();
 
         return new Book(author, year, language, ISBN, title, pages);
     }
 
-    public ArrayList<Book> loadData(){
+    public ArrayList<Book> loadBookData() throws FileNotFoundException{
+        File bookfile = new File(bookPath);
         ArrayList<Book> bookList = new ArrayList<>();
-        while (scanner.hasNextLine()){
-            String bookInformation = scanner.nextLine();
+
+        try (Scanner bookScanner = new Scanner(bookfile)){
+        while (bookScanner.hasNextLine()){
+            String bookInformation = bookScanner.nextLine();
+            if (bookInformation.trim().isEmpty()) continue;
             String[] splitData = bookInformation.split("\\|");
             bookList.add(bookMaker(splitData));
-
+            }
         }
         return bookList;
+    }
+    public User userMaker(String[] userList){
+        String username = userList[0].substring(userList[0].indexOf(":") + 1).trim();
+        String password = userList[1].substring(userList[1].indexOf(":") + 1).trim();
+
+        return new User(username, password);
+    }
+
+    public ArrayList<User> loadUserData() throws FileNotFoundException {
+        File userFile = new File(userPath);
+        ArrayList<User> userList = new ArrayList<>();
+
+        try (Scanner userScanner = new Scanner(userFile)) {
+            while (userScanner.hasNextLine()) {
+                String userInformation = userScanner.nextLine();
+                if (userInformation.trim().isEmpty()) continue;
+                String[] splitData = userInformation.split("\\|");
+                userList.add(userMaker(splitData));
+            }
+        }
+        return userList;
+
+    }
+
+    public void saveUserToFile(User user) throws IOException {
+        try (FileWriter fw = new FileWriter(userPath, true);
+             BufferedWriter bw = new BufferedWriter(fw);
+             PrintWriter out = new PrintWriter(bw)){
+
+            String userLine = "username:" + user.getUsername() +
+                    "|password:" + user.getPassword();
+
+            out.println(userLine);
+        }
+    }
+
+    public void saveLoan(String userID, String ISBN) throws FileNotFoundException{
+        try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(loanPath, true)))){
+            out.println(userID + "|" + ISBN);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

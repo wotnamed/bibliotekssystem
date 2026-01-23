@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class Library {
     FileManager fileManager = new FileManager();
-    ArrayList<Book> bookList = fileManager.loadData();
+    ArrayList<Book> bookList = fileManager.loadBookData();
 
     public Library() throws FileNotFoundException {
     }
