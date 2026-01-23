@@ -84,6 +84,10 @@ public class Main {
         topPanel.add(searchField);
         topPanel.add(searchButton);
 
+        // garbage search button
+        JButton myLoansButton = new JButton("My loans");
+        topPanel.add(myLoansButton);
+
         // Center scrollable area for the 3 boxes
         JPanel boxesContainer = new JPanel();
         boxesContainer.setLayout(new BoxLayout(boxesContainer, BoxLayout.Y_AXIS));
@@ -106,6 +110,14 @@ public class Main {
         );
 
         frame.add(panel);
+
+        //???
+        myLoansButton.addActionListener(e -> {
+            frame.getContentPane().removeAll();
+            createLoanView(frame);
+            frame.revalidate();
+            frame.repaint();
+        });
     }
 
     private JPanel createSampleBox(Book book) {
@@ -138,5 +150,44 @@ public class Main {
         JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.CENTER));
         wrapper.add(comp);
         return wrapper;
+    }
+
+    private void createLoanView(JFrame frame){
+        JPanel loanPanel = new JPanel();
+        loanPanel.setLayout(new BorderLayout());
+
+        JPanel headerPanel = new JPanel();
+        JLabel titleText = new JLabel();
+        titleText.setText("MY LOANS");
+
+        headerPanel.add(titleText);
+        JButton homePageButton = new JButton("Home");
+        headerPanel.add(homePageButton);
+
+        JPanel boxesContainer = new JPanel();
+        boxesContainer.setLayout(new BoxLayout(boxesContainer, BoxLayout.Y_AXIS));
+
+        Book defaultBook = new Book("", "", "", "", "", "");
+        // Add three titled boxes
+        boxesContainer.add(createSampleBox(defaultBook));
+        boxesContainer.add(Box.createRigidArea(new Dimension(0, 15)));
+        boxesContainer.add(createSampleBox(defaultBook));
+        boxesContainer.add(Box.createRigidArea(new Dimension(0, 15)));
+        boxesContainer.add(createSampleBox(defaultBook));
+
+        JScrollPane scrollPane = new JScrollPane(boxesContainer);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+        loanPanel.add(headerPanel, BorderLayout.NORTH);
+        loanPanel.add(scrollPane, BorderLayout.CENTER);
+
+        frame.add(loanPanel);
+
+        homePageButton.addActionListener(e -> {
+            frame.getContentPane().removeAll();
+            createSearchView(frame);
+            frame.revalidate();
+            frame.repaint();
+        });
     }
 }
