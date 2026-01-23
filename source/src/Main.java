@@ -127,6 +127,8 @@ public class Main {
         JPanel boxPanel = new JPanel();
         boxPanel.setLayout(new BoxLayout(boxPanel, BoxLayout.Y_AXIS));
         boxPanel.setBorder(BorderFactory.createTitledBorder(book.getTitle()));
+        //         panel.setPreferredSize(new Dimension(300, 200));
+        boxPanel.add(new JLabel("------------------------------------------------------------"));
         for (Method method : methods){
             if (method.getName().startsWith("get") && method.getParameterCount() == 0) {
                 try {
@@ -138,6 +140,7 @@ public class Main {
                 }
             }
         }
+        boxPanel.add(new JLabel("------------------------------------------------------------"));
         return boxPanel;
     }
 
