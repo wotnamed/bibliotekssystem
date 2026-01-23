@@ -76,6 +76,7 @@ public class Main {
     private void createSearchView(JFrame frame) {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
+        frame.setTitle("Search");
 
         // Top search bar
         JPanel topPanel = new JPanel();
@@ -158,7 +159,8 @@ public class Main {
 
         JPanel headerPanel = new JPanel();
         JLabel titleText = new JLabel();
-        titleText.setText("MY LOANS");
+        titleText.setText("My Loans");
+        frame.setTitle("Loans");
 
         headerPanel.add(titleText);
         JButton homePageButton = new JButton("Home");
