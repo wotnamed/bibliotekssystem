@@ -101,7 +101,7 @@ public class Main {
         panel.add(topPanel, BorderLayout.NORTH);
         panel.add(scrollPane, BorderLayout.CENTER);
 
-        // Search method thank you!
+        // Search method, thank you!
         searchButton.addActionListener(e -> {
             boxesContainer.removeAll();
             addTitledBoxesForBookInList(library.searchForBook(searchField.getText()), boxesContainer);

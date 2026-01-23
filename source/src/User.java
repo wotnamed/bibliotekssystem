@@ -1,3 +1,4 @@
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -5,7 +6,7 @@ public class User {
     // very rudimentary user
     private String username;
     private String password;
-    private static final String userID = UUID.randomUUID().toString();
+    private String userID;
 
     public String getUsername() {
         return username;
@@ -24,8 +25,21 @@ public class User {
         this.password = password;
     }
 
+    public void loan(Book book) throws FileNotFoundException {
+        FileManager fileManager = new FileManager();
+        fileManager.saveLoan(this.getUserID(), book.getISBN());
+    }
+
     public User(String username, String password){
         this.username = username;
         this.password = password;
+        this.userID = UUID.randomUUID().toString();
+    }
+
+    //for loading from file
+    public User(String username, String password, String userID){
+        this.username = username;
+        this.password = password;
+        this.userID = userID;
     }
 }

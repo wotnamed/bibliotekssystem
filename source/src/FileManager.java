@@ -40,8 +40,9 @@ public class FileManager {
     public User userMaker(String[] userList){
         String username = userList[0].substring(userList[0].indexOf(":") + 1).trim();
         String password = userList[1].substring(userList[1].indexOf(":") + 1).trim();
+        String userID = userList[2].substring(userList[2].indexOf(":") + 1).trim();
 
-        return new User(username, password);
+        return new User(username, password, userID);
     }
 
     public ArrayList<User> loadUserData() throws FileNotFoundException {
@@ -57,7 +58,6 @@ public class FileManager {
             }
         }
         return userList;
-
     }
 
     public void saveUserToFile(User user) throws IOException {
@@ -66,7 +66,8 @@ public class FileManager {
              PrintWriter out = new PrintWriter(bw)){
 
             String userLine = "username:" + user.getUsername() +
-                    "|password:" + user.getPassword();
+                    "|password:" + user.getPassword() +
+                    "|userid:" + user.getUserID();
 
             out.println(userLine);
         }
