@@ -25,11 +25,6 @@ public class User {
         this.password = password;
     }
 
-    public void loan(Book book) throws FileNotFoundException {
-        FileManager fileManager = new FileManager();
-        fileManager.saveLoan(this.getUserID(), book.getISBN());
-    }
-
     public User(String username, String password){
         this.username = username;
         this.password = password;

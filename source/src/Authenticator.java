@@ -1,10 +1,18 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class Authenticator {
-    private ArrayList<User> userlist = new ArrayList<User>();
+    FileManager fileManager = new FileManager();
+    private ArrayList<User> userlist = fileManager.loadUserData();
 
-    public Authenticator(){
+    //Needed when user is removed as to not enable invalid login
+    public void updateUserList() throws FileNotFoundException {
+        this.userlist = fileManager.loadUserData();
+    }
+
+    public Authenticator() throws FileNotFoundException {
         this.userlist.add(new User("admin", "admin"));
         System.out.println(userlist);
     }
