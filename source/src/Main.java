@@ -19,7 +19,7 @@ public class Main {
         });
     }
 
-    private void createLoginView() {
+    private void createLoginView() throws FileNotFoundException {
         JFrame frame = new JFrame("Login Window");
         frame.setSize(600, 1000);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

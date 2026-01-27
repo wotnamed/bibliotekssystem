@@ -11,6 +11,8 @@ public class Library {
     public Library() throws FileNotFoundException {
     }
 
+    public ArrayList<Book> getBooklist(){return bookList;}
+
     public void createNewCustomer(User user) throws IOException {
         userList.add(user);
         fileManager.saveUserToFile(user);
