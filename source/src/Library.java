@@ -1,6 +1,8 @@
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.channels.AlreadyBoundException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Library {
     FileManager fileManager = new FileManager();
@@ -13,7 +15,15 @@ public class Library {
 
     public ArrayList<Book> getBooklist(){return bookList;}
 
-    public void createNewCustomer(User user) throws IOException {
+    public void createNewCustomer(User user) throws IOException, IllegalArgumentException, AlreadyBoundException {
+        if (Objects.equals(user.getUsername(), "") || Objects.equals(user.getPassword(), "")){
+            throw new IllegalArgumentException();
+        }
+        for(User otherUser: userList){
+            if(Objects.equals(otherUser.getUsername(), user.getUsername())){
+                throw new AlreadyBoundException();
+            }
+        }
         userList.add(user);
         fileManager.saveUserToFile(user);
     }

@@ -2,10 +2,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect. *;
 import java.io.*;
+import java.nio.channels.AlreadyBoundException;
 import java.util.ArrayList;
 
 public class Main {
     Library library = new Library();
+    public User activeUser;
     public Main() throws FileNotFoundException {
     }
 
@@ -52,7 +54,6 @@ public class Main {
         panel.add(Box.createRigidArea(new Dimension(0, 30)));
 
         panel.add(centerComponent(loginButton));
-        // skrrrr
         panel.add(centerComponent(createAccountButton));
 
 
@@ -70,8 +71,10 @@ public class Main {
 
             if (auth.authCheck(usernameField.getText(), passwordField.getText())) {
                 transitionSearchView(frame);
+                activeUser = auth.getUser(usernameField.getText());
+                System.out.println("Logged in as " + activeUser.getUserID());
             } else {
-                System.out.println("Invalid username or password!");
+                System.out.println("Incorrect username or password!");
             }
         });
 
@@ -113,15 +116,19 @@ public class Main {
         confirmButton.addActionListener( e -> {
             try {
                 library.createNewCustomer(new User(usernameField.getText(), passwordField.getText()));
+                System.out.println("Account created.");
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
+            } catch (AlreadyBoundException ex) {
+                System.out.println("Username taken!");
+            } catch (IllegalArgumentException ex) {
+                System.out.println("Username and password fields must not be empty!");
             }
         });
 
         backToLoginView.addActionListener( e -> {
             try {
                 transitionLoginView(frame);
-                // TODO: this shit just creates a new window so please fix thanks...
             } catch (FileNotFoundException ex) {
                 throw new RuntimeException(ex);
             }
