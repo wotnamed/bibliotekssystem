@@ -27,18 +27,30 @@ public class Library {
         userList.add(user);
         fileManager.saveUserToFile(user);
     }
-
-    public void loanBook(Book book, User user) throws FileNotFoundException {
+    public void updateLoanData() throws FileNotFoundException {
+        loanList = fileManager.loadLoanData();
+    }
+    public void loanBook(Book book, User user) throws FileNotFoundException, AssertionError {
+        ArrayList<Loan> userLoans = getUserLoans(user);
+        // We don't want users to be able to loan multiple (infinite) copies of each book so here is a way of stopping that.
+        String takenISBN = book.getISBN();
+        for(Loan loan: userLoans){
+            if (Objects.equals(loan.getISBN(), takenISBN)){
+                throw new AssertionError();
+            }
+        }
         Loan loan = new Loan(user.getUserID(), book.getISBN());
         fileManager.saveLoan(loan);
     }
 
     public void returnLoan(Loan loan) throws IOException {
         loanList.remove(loan);
-        fileManager.removeLoan(loan.getUserID());
+        fileManager.removeLoan(loan);
+        updateLoanData();
     }
 
-    public ArrayList<Loan> getUserLoans(User user){
+    public ArrayList<Loan> getUserLoans(User user) throws FileNotFoundException {
+        updateLoanData();
         ArrayList<Loan> myLoans = new ArrayList<Loan>();
         for(Loan loan: loanList){
             if(loan.getUserID().equals(user.getUserID())){

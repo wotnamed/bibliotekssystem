@@ -171,6 +171,10 @@ public class Main {
         JButton myLoansButton = new JButton("My loans");
         topPanel.add(myLoansButton);
 
+        // settings button
+        JButton userSettingsButton = new JButton("Settings");
+        topPanel.add(userSettingsButton);
+
         // logout button
         JButton logOutButton = new JButton("Log out");
         topPanel.add(logOutButton);
@@ -193,15 +197,17 @@ public class Main {
             addTitledBoxesForBookInList(library.searchForBook(searchField.getText()), boxesContainer);
             frame.revalidate();
             frame.repaint();
-        }
-        );
+        });
 
         frame.add(panel);
 
-        //???
         myLoansButton.addActionListener(e -> {
             frame.getContentPane().removeAll();
-            createLoanView(frame);
+            try {
+                createLoanView(frame);
+            } catch (FileNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
             frame.revalidate();
             frame.repaint();
         });
@@ -213,9 +219,12 @@ public class Main {
                 throw new RuntimeException(ex);
             }
         });
+        userSettingsButton.addActionListener(e ->{
+
+        });
     }
 
-    private JPanel createSampleBox(Book book) {
+    private JPanel createBookBox(Book book) {
         Class<?> thisBook = Book.class;
         Method[] methods = thisBook.getDeclaredMethods();
         JPanel boxPanel = new JPanel();
@@ -247,17 +256,61 @@ public class Main {
 
         JButton borrowButton = new JButton("Borrow");
         buttonPanel.add(borrowButton);
+        boxPanel.add(buttonPanel);
+
+        borrowButton.addActionListener( e->{
+            try {
+                library.loanBook(book, activeUser);
+            } catch (FileNotFoundException ex) {
+                throw new RuntimeException(ex);
+            } catch (AssertionError ex) {
+                System.out.println("You've already borrowing this book!");
+            }
+        });
+
+        return boxPanel;
+    }
+
+    private JPanel createLoanBox(Loan loan) {
+        JPanel boxPanel = new JPanel();
+        boxPanel.setLayout(new BoxLayout(boxPanel, BoxLayout.Y_AXIS));
+        boxPanel.setBorder(BorderFactory.createTitledBorder(loan.getISBN()));
+        //         panel.setPreferredSize(new Dimension(300, 200));
+        boxPanel.add(new JLabel("------------------------------------------------------------"));
+        boxPanel.add(new JLabel("ISBN: " + loan.getISBN()));
+        boxPanel.add(new JLabel("Borrow date: " + loan.getLoanDate()));
+        boxPanel.add(new JLabel("Return date: " + loan.getReturnDate()));
+        boxPanel.add(new JLabel("Loaned by: " + loan.getUserID()));
+        boxPanel.add(new JLabel("------------------------------------------------------------"));
+
+        JPanel buttonPanel = new JPanel();
         JButton returnButton = new JButton("Return");
         buttonPanel.add(returnButton);
         boxPanel.add(buttonPanel);
+
+        returnButton.addActionListener(e ->{
+            try {
+                library.returnLoan(loan);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
 
         return boxPanel;
     }
 
     private void addTitledBoxesForBookInList(ArrayList<Book> bookList, JPanel boxesContainer){
         for(Book book : bookList){
-        boxesContainer.add(createSampleBox(book));
-        boxesContainer.add(Box.createRigidArea(new Dimension(0, 15)));}
+        boxesContainer.add(createBookBox(book));
+        boxesContainer.add(Box.createRigidArea(new Dimension(0, 15)));
+        }
+    }
+
+    private void addTitledBoxesForLoanInList(ArrayList<Loan> loanList, JPanel boxesContainer){
+        for(Loan loan : loanList){
+            boxesContainer.add(createLoanBox(loan));
+            boxesContainer.add(Box.createRigidArea(new Dimension(0, 15)));
+        }
     }
 
     private Component centerComponent(Component comp) {
@@ -266,7 +319,7 @@ public class Main {
         return wrapper;
     }
 
-    private void createLoanView(JFrame frame){
+    private void createLoanView(JFrame frame) throws FileNotFoundException {
         JPanel loanPanel = new JPanel();
         loanPanel.setLayout(new BorderLayout());
 
@@ -279,16 +332,17 @@ public class Main {
         JButton homePageButton = new JButton("Home");
         headerPanel.add(homePageButton);
 
+        JButton refreshButton = new JButton("Refresh page");
+        headerPanel.add(refreshButton);
+
         JPanel boxesContainer = new JPanel();
         boxesContainer.setLayout(new BoxLayout(boxesContainer, BoxLayout.Y_AXIS));
 
         Book defaultBook = new Book("", "", "", "", "", "");
+
         // Add three titled boxes
-        boxesContainer.add(createSampleBox(defaultBook));
-        boxesContainer.add(Box.createRigidArea(new Dimension(0, 15)));
-        boxesContainer.add(createSampleBox(defaultBook));
-        boxesContainer.add(Box.createRigidArea(new Dimension(0, 15)));
-        boxesContainer.add(createSampleBox(defaultBook));
+
+        addTitledBoxesForLoanInList(library.getUserLoans(activeUser), boxesContainer);
 
         JScrollPane scrollPane = new JScrollPane(boxesContainer);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -304,5 +358,27 @@ public class Main {
             frame.revalidate();
             frame.repaint();
         });
+
+        refreshButton.addActionListener(e-> {
+            try {
+                frame.getContentPane().removeAll();
+                createLoanView(frame);
+                frame.revalidate();
+                frame.repaint();
+            } catch (FileNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+    }
+
+    private void transitionUserSettingsView(JFrame frame){
+        frame.getContentPane().removeAll();
+        createUserSettingsView(frame);
+        frame.revalidate();
+        frame.repaint();
+    }
+
+    private void createUserSettingsView(JFrame frame){
+        // TODO: Create User setting screen and implement setting button on search screen
     }
 }

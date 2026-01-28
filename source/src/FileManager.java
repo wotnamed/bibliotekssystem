@@ -117,9 +117,11 @@ public class FileManager {
         }
     }
 
-    public void removeLoan(String userID) throws IOException{
+    public void removeLoan(Loan givenLoan) throws IOException{
+        String userID = givenLoan.getUserID();
+        String ISBN = givenLoan.getISBN();
         ArrayList<Loan> loans = loadLoanData();
-        loans.removeIf(loan -> loan.getUserID().equals(userID));
+        loans.removeIf(loan -> loan.getUserID().equals(userID) && loan.getISBN().equals(ISBN));
         clearFile(loanPath);
         for(Loan loan: loans){
             saveLoan(loan);
