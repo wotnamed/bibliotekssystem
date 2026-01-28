@@ -12,19 +12,23 @@ public class Main {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             try {
-                new Main().createLoginView();
+                new Main().setup();
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
         });
     }
 
-    private void createLoginView() throws FileNotFoundException {
-        JFrame frame = new JFrame("Login Window");
+    private void setup() throws FileNotFoundException {
+        // moved setup code to separate function to be able to call createLoginView() multiple times.
+        JFrame frame = new JFrame("Init");
         frame.setSize(600, 1000);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
-
+        transitionLoginView(frame);
+    }
+    private void createLoginView(JFrame frame) throws FileNotFoundException {
+        frame.setTitle("Login Window");
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
@@ -33,6 +37,8 @@ public class Main {
         JTextField usernameField = new JTextField(20);
         JPasswordField passwordField = new JPasswordField(20);
         JButton loginButton = new JButton("Log In");
+        // WE NEED THIS!
+        JButton createAccountButton = new JButton("Create Account");
 
         usernameField.setMaximumSize(new Dimension(200, 30));
         passwordField.setMaximumSize(new Dimension(200, 30));
@@ -46,6 +52,9 @@ public class Main {
         panel.add(Box.createRigidArea(new Dimension(0, 30)));
 
         panel.add(centerComponent(loginButton));
+        // skrrrr
+        panel.add(centerComponent(createAccountButton));
+
 
         panel.add(Box.createVerticalGlue());
 
@@ -65,11 +74,77 @@ public class Main {
                 System.out.println("Invalid username or password!");
             }
         });
+
+        createAccountButton.addActionListener( e -> {
+            transitionCreateAccountView(frame);
+        });
     }
 
+    private void createAccountView(JFrame frame){
+        frame.setTitle("Create Account");
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+        panel.add(Box.createVerticalGlue());
+
+        JTextField usernameField = new JTextField(20);
+        JPasswordField passwordField = new JPasswordField(20);
+        JButton confirmButton = new JButton("Confirm");
+        JButton backToLoginView = new JButton("Back");
+
+        usernameField.setMaximumSize(new Dimension(200, 30));
+        passwordField.setMaximumSize(new Dimension(200, 30));
+
+        panel.add(centerComponent(new JLabel("Username:")));
+        panel.add(centerComponent(usernameField));
+        panel.add(Box.createRigidArea(new Dimension(0, 20)));
+
+        panel.add(centerComponent(new JLabel("Password:")));
+        panel.add(centerComponent(passwordField));
+        panel.add(Box.createRigidArea(new Dimension(0, 30)));
+
+        panel.add(centerComponent(confirmButton));
+        panel.add(centerComponent(backToLoginView));
+
+        panel.add(Box.createVerticalGlue());
+
+        frame.add(panel);
+        frame.setVisible(true);
+        confirmButton.addActionListener( e -> {
+            try {
+                library.createNewCustomer(new User(usernameField.getText(), passwordField.getText()));
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        backToLoginView.addActionListener( e -> {
+            try {
+                transitionLoginView(frame);
+                // TODO: this shit just creates a new window so please fix thanks...
+            } catch (FileNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+
+    }
+    private void transitionCreateAccountView(JFrame frame){
+        frame.getContentPane().removeAll();
+        createAccountView(frame);
+        frame.revalidate();
+        frame.repaint();
+    }
     private void transitionSearchView(JFrame frame){
         frame.getContentPane().removeAll();
         createSearchView(frame);
+        frame.revalidate();
+        frame.repaint();
+    }
+
+    private void transitionLoginView(JFrame frame) throws FileNotFoundException {
+        frame.getContentPane().removeAll();
+        createLoginView(frame);
         frame.revalidate();
         frame.repaint();
     }
@@ -88,6 +163,10 @@ public class Main {
         // garbage search button
         JButton myLoansButton = new JButton("My loans");
         topPanel.add(myLoansButton);
+
+        // logout button
+        JButton logOutButton = new JButton("Log out");
+        topPanel.add(logOutButton);
 
         // Center scrollable area for the 3 boxes
         JPanel boxesContainer = new JPanel();
@@ -118,6 +197,14 @@ public class Main {
             createLoanView(frame);
             frame.revalidate();
             frame.repaint();
+        });
+
+        logOutButton.addActionListener( e ->{
+            try {
+                transitionLoginView(frame);
+            } catch (FileNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
         });
     }
 
