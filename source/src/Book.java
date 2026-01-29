@@ -1,4 +1,6 @@
-public class Book {
+import java.util.LinkedHashMap;
+
+public class Book implements LibraryItem{
     protected String author;
     protected String year;
     protected String language;
@@ -15,6 +17,21 @@ public class Book {
         this.pages = pages;
     }
 
+    @Override
+    public LinkedHashMap<String, String> getDisplayInfo() {
+        LinkedHashMap<String, String> info = new LinkedHashMap<>();
+        info.put("Year: ", this.getYear());
+        info.put("Author: ", this.getISBN());
+        info.put("Title: ", this.getTitle());
+        info.put("Languages: ", this.getLanguage());
+        info.put("ISBN: ", this.getISBN());
+
+        return info;
+    }
+
+    public boolean matchesSearch(String search){
+        return title.contains(search) || author.contains(search);
+    }
     public String getAuthor() {
         return author;
     }

@@ -5,8 +5,9 @@ import java.io.*;
 import java.nio.channels.AlreadyBoundException;
 import java.util.ArrayList;
 
-public class Main { // maybe JFrame frame should be located here?
-    private Library library = new Library();
+public class Main {
+    private DataManager fileManager = new FileManager();// maybe JFrame frame should be located here?
+    private Library library = new Library(fileManager);
     private Authenticator auth = new Authenticator();
     private User activeUser;
     public Main() throws FileNotFoundException {
@@ -179,7 +180,7 @@ public class Main { // maybe JFrame frame should be located here?
         JPanel boxesContainer = new JPanel();
         boxesContainer.setLayout(new BoxLayout(boxesContainer, BoxLayout.Y_AXIS));
 
-        addTitledBoxesForBookInList(library.getBooklist(), boxesContainer);
+        addTitledBoxesForLibraryItemInList(library.getLibraryItems(), boxesContainer);
 
         JScrollPane scrollPane = new JScrollPane(boxesContainer);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -190,7 +191,7 @@ public class Main { // maybe JFrame frame should be located here?
         // Search method, thank you!
         searchButton.addActionListener(e -> {
             boxesContainer.removeAll();
-            addTitledBoxesForBookInList(library.searchForBook(searchField.getText()), boxesContainer);
+            addTitledBoxesForLibraryItemInList(library.searchForBook(searchField.getText()), boxesContainer);
             frame.revalidate();
             frame.repaint();
         });
@@ -225,12 +226,10 @@ public class Main { // maybe JFrame frame should be located here?
         });
     }
 
-    private JPanel createBookBox(Book book) {
-        Class<?> thisBook = Book.class;
-        Method[] methods = thisBook.getDeclaredMethods();
+    private JPanel createItemBox(LibraryItem item) {
         JPanel boxPanel = new JPanel();
         boxPanel.setLayout(new BoxLayout(boxPanel, BoxLayout.Y_AXIS));
-        boxPanel.setBorder(BorderFactory.createTitledBorder(book.getTitle()));
+        boxPanel.setBorder(BorderFactory.createTitledBorder(item.getTitle()));
         //         panel.setPreferredSize(new Dimension(300, 200));
         boxPanel.add(new JLabel("------------------------------------------------------------"));
         /*for (Method method : methods){
@@ -244,12 +243,8 @@ public class Main { // maybe JFrame frame should be located here?
                 }
             }
         }*/ //legacy code by Mr Ragebait the Second
-        boxPanel.add(new JLabel("Year: " + book.getYear()));
-        boxPanel.add(new JLabel("Author: " + book.getAuthor()));
-        boxPanel.add(new JLabel("Title: " + book.getTitle()));
-        boxPanel.add(new JLabel("Language: " + book.getLanguage()));
-        boxPanel.add(new JLabel("Pages: " + book.getPages()));
-        boxPanel.add(new JLabel("ISBN: " + book.getISBN()));
+        item.getDisplayInfo().forEach((label, value) -> {boxPanel.add(new JLabel(label + value));
+        });
         boxPanel.add(new JLabel("------------------------------------------------------------"));
 
         JPanel buttonPanel = new JPanel();
@@ -261,9 +256,9 @@ public class Main { // maybe JFrame frame should be located here?
 
         borrowButton.addActionListener( e->{
             try {
-                library.loanBook(book, activeUser);
-                System.out.println("Book '"  + book.getTitle() + "' successfully borrowed.");
-            } catch (FileNotFoundException ex) {
+                library.loanBook(item, activeUser);
+                System.out.println("Book '"  + item.getTitle() + "' successfully borrowed.");
+            } catch (IOException ex) {
                 throw new RuntimeException(ex);
             } catch (AssertionError ex) {
                 System.out.println("You're already borrowing this book!");
@@ -301,9 +296,9 @@ public class Main { // maybe JFrame frame should be located here?
         return boxPanel;
     }
 
-    private void addTitledBoxesForBookInList(ArrayList<Book> bookList, JPanel boxesContainer){
-        for(Book book : bookList){
-        boxesContainer.add(createBookBox(book));
+    private void addTitledBoxesForLibraryItemInList(ArrayList<LibraryItem> itemList, JPanel boxesContainer){
+        for(LibraryItem item : itemList){
+        boxesContainer.add(createItemBox(item));
         boxesContainer.add(Box.createRigidArea(new Dimension(0, 15)));
         }
     }

@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.nio.file.Paths; // thanks Lukas1!!!11!!
 
-public class FileManager {
+public class FileManager implements DataManager{
     private static final String basePath = Paths.get("").toAbsolutePath() + File.separator + "resources" + File.separator;
     private static final String bookPath = basePath + "books_the_library_system.txt";
     private static final String userPath = basePath + "users.txt";
     private static final String loanPath = basePath + "loans.txt";
 
-    public Book bookMaker(String[] bookList){
+    public LibraryItem bookMaker(String[] bookList){
         String title = bookList[0].substring(bookList[0].indexOf(":") + 1).trim();
         String author = bookList[1].substring(bookList[1].indexOf(":") + 1).trim();
         String pages = bookList[2].substring(bookList[2].indexOf(":") + 1).trim();
@@ -21,10 +21,9 @@ public class FileManager {
         return new Book(author, year, language, ISBN, title, pages);
     }
 
-    public ArrayList<Book> loadBookData() throws FileNotFoundException{
+    public ArrayList<LibraryItem> loadLibraryItems() throws FileNotFoundException{
         File bookfile = new File(bookPath);
-        ArrayList<Book> bookList = new ArrayList<>();
-
+        ArrayList<LibraryItem> bookList = new ArrayList<>();
         try (Scanner bookScanner = new Scanner(bookfile)){
         while (bookScanner.hasNextLine()){
             String bookInformation = bookScanner.nextLine();

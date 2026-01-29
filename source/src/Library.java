@@ -5,15 +5,20 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Library {
-    private FileManager fileManager = new FileManager();
-    private ArrayList<Book> bookList = fileManager.loadBookData();
-    private ArrayList<User> userList = fileManager.loadUserData();
-    private ArrayList<Loan> loanList = fileManager.loadLoanData();
+    private DataManager dataManager;
+    private ArrayList<LibraryItem> bookList;
+    private ArrayList<User> userList;
+    private ArrayList<Loan> loanList;
 
-    public Library() throws FileNotFoundException {
+    public Library(DataManager dataManager) throws FileNotFoundException {
+        this.dataManager = dataManager;
+        this.bookList = dataManager.loadLibraryItems();
+        this.userList = dataManager.loadUserData();
+        this.loanList = dataManager.loadLoanData();
+
     }
 
-    public ArrayList<Book> getBooklist(){return bookList;}
+    public ArrayList<LibraryItem> getLibraryItems(){return bookList;}
 
     public void changeUserPassword(String userID, String newPassword) throws IOException, IllegalArgumentException {
         if (Objects.equals(newPassword, "")) {
@@ -21,9 +26,9 @@ public class Library {
         }
         for (User user : userList){
             if (Objects.equals(userID, user.getUserID())){
-                fileManager.removeUser(user.getUserID());
+                dataManager.removeUser(user.getUserID());
                 user.setPassword(newPassword);
-                fileManager.saveUserToFile(user);
+                dataManager.saveUserToFile(user);
                 updateUserData();
             }
         }
@@ -43,40 +48,40 @@ public class Library {
             }
         }
         userList.add(user);
-        fileManager.saveUserToFile(user);
+        dataManager.saveUserToFile(user);
     }
 
     public void deleteCustomer(User user) throws IOException {
         ArrayList<Loan> userLoans = getUserLoans(user);
-        fileManager.removeUser(user.getUserID());
+        dataManager.removeUser(user.getUserID());
         for (Loan loan : userLoans){
             returnLoan(loan);
         }
     }
 
     public void updateLoanData() throws FileNotFoundException {
-        loanList = fileManager.loadLoanData();
+        loanList = dataManager.loadLoanData();
     }
 
     public void updateUserData() throws FileNotFoundException {
-        userList = fileManager.loadUserData();
+        userList = dataManager.loadUserData();
     }
-    public void loanBook(Book book, User user) throws FileNotFoundException, AssertionError {
+    public void loanBook(LibraryItem item, User user) throws IOException, AssertionError {
         ArrayList<Loan> userLoans = getUserLoans(user);
         // We don't want users to be able to loan multiple (infinite) copies of each book so here is a way of stopping that.
-        String takenISBN = book.getISBN();
+        String takenISBN = item.getISBN();
         for(Loan loan: userLoans){
             if (Objects.equals(loan.getISBN(), takenISBN)){
                 throw new AssertionError();
             }
         }
-        Loan loan = new Loan(user.getUserID(), book.getISBN());
-        fileManager.saveLoan(loan);
+        Loan loan = new Loan(user.getUserID(), item.getISBN());
+        dataManager.saveLoan(loan);
     }
 
     public void returnLoan(Loan loan) throws IOException {
         loanList.remove(loan);
-        fileManager.removeLoan(loan);
+        dataManager.removeLoan(loan);
         updateLoanData();
     }
 
@@ -91,11 +96,11 @@ public class Library {
         return myLoans;
     }
 
-    public ArrayList<Book> searchForBook(String search){
-        ArrayList<Book> results = new ArrayList<>();
-        for (Book i : bookList){
-            if (i.getAuthor().contains(search) || i.getISBN().contains(search) || i.getLanguage().contains(search) || i.getTitle().contains(search) || i.getYear().contains(search) || i.getPages().contains(search)) {
-                results.add(i);
+    public ArrayList<LibraryItem> searchForBook(String search){
+        ArrayList<LibraryItem> results = new ArrayList<>();
+        for (LibraryItem item : bookList){
+            if (item.matchesSearch(search)){
+                results.add(item);
             }
         }
         return results;
