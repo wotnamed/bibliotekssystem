@@ -5,7 +5,7 @@ import java.io.*;
 import java.nio.channels.AlreadyBoundException;
 import java.util.ArrayList;
 
-public class Main {
+public class Main { // maybe JFrame frame should be located here?
     Library library = new Library();
     Authenticator auth = new Authenticator();
     public User activeUser;
@@ -23,25 +23,24 @@ public class Main {
     }
 
     private void setup() throws FileNotFoundException {
-        // moved setup code to separate function to be able to call createLoginView() multiple times.
+        // moved setup code to separate function to be able to call createLoginView() multiple times without creating new windows.
         JFrame frame = new JFrame("Init");
         frame.setSize(600, 1000);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         transitionLoginView(frame);
     }
+
     private void createLoginView(JFrame frame) throws FileNotFoundException {
         library.updateUserData();
         frame.setTitle("Login Window");
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
         panel.add(Box.createVerticalGlue());
 
         JTextField usernameField = new JTextField(20);
         JPasswordField passwordField = new JPasswordField(20);
         JButton loginButton = new JButton("Log In");
-        // WE NEED THIS!
         JButton createAccountButton = new JButton("Create Account");
 
         usernameField.setMaximumSize(new Dimension(200, 30));
@@ -57,20 +56,15 @@ public class Main {
 
         panel.add(centerComponent(loginButton));
         panel.add(centerComponent(createAccountButton));
-
-
         panel.add(Box.createVerticalGlue());
 
         frame.add(panel);
         frame.setVisible(true);
 
-        // load authentication
+        // update auth
         auth.updateUserList();
 
         loginButton.addActionListener(e -> {
-            System.out.println("User: "+usernameField.getText());
-            System.out.println("Very-secure password: "+passwordField.getText());
-
             if (auth.authCheck(usernameField.getText(), passwordField.getText())) {
                 transitionSearchView(frame);
                 activeUser = auth.getUser(usernameField.getText());
@@ -89,7 +83,6 @@ public class Main {
         frame.setTitle("Create Account");
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
         panel.add(Box.createVerticalGlue());
 
         JTextField usernameField = new JTextField(20);
@@ -135,15 +128,15 @@ public class Main {
                 throw new RuntimeException(ex);
             }
         });
-
-
     }
+
     private void transitionCreateAccountView(JFrame frame){
         frame.getContentPane().removeAll();
         createAccountView(frame);
         frame.revalidate();
         frame.repaint();
     }
+
     private void transitionSearchView(JFrame frame){
         frame.getContentPane().removeAll();
         createSearchView(frame);
@@ -157,6 +150,7 @@ public class Main {
         frame.revalidate();
         frame.repaint();
     }
+
     private void createSearchView(JFrame frame) {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
@@ -268,10 +262,11 @@ public class Main {
         borrowButton.addActionListener( e->{
             try {
                 library.loanBook(book, activeUser);
+                System.out.println("Book '"  + book.getTitle() + "' successfully borrowed.");
             } catch (FileNotFoundException ex) {
                 throw new RuntimeException(ex);
             } catch (AssertionError ex) {
-                System.out.println("You've already borrowing this book!");
+                System.out.println("You're already borrowing this book!");
             }
         });
 
@@ -386,7 +381,6 @@ public class Main {
     }
 
     private void createUserSettingsView(JFrame frame) throws FileNotFoundException {
-        // TODO: Create User setting screen and implement setting button on search screen
         JPanel settingsPanel = new JPanel();
         settingsPanel.setLayout(new BorderLayout());
 
@@ -463,8 +457,11 @@ public class Main {
                 library.changeUserPassword(activeUser.getUserID(), passwordField.getText());
                 auth.updateUserList();
                 activeUser = auth.getUser(activeUser.getUsername());
+                System.out.println("Password changed.");
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
+            } catch (IllegalArgumentException ex) {
+                System.out.println("Password field must not be empty!");
             }
         });
 

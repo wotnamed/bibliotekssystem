@@ -15,13 +15,15 @@ public class Library {
 
     public ArrayList<Book> getBooklist(){return bookList;}
 
-    public void changeUserPassword(String userID, String newPassword) throws IOException {
+    public void changeUserPassword(String userID, String newPassword) throws IOException, IllegalArgumentException {
+        if (Objects.equals(newPassword, "")) {
+            throw new IllegalArgumentException();
+        }
         for (User user : userList){
             if (Objects.equals(userID, user.getUserID())){
-                User oldUser = user;
                 fileManager.removeUser(user.getUserID());
-                oldUser.setPassword(newPassword);
-                fileManager.saveUserToFile(oldUser);
+                user.setPassword(newPassword);
+                fileManager.saveUserToFile(user);
                 updateUserData();
             }
         }
