@@ -397,6 +397,9 @@ public class Main {
 
         JButton homePageButton = new JButton("Home");
         headerPanel.add(homePageButton);
+        JButton refreshButton = new JButton("Refresh page");
+        headerPanel.add(refreshButton);
+
 
         JPanel boxesContainer = new JPanel();
         boxesContainer.setLayout(new BoxLayout(boxesContainer, BoxLayout.Y_AXIS));
@@ -429,6 +432,8 @@ public class Main {
         passwordPanel.setBorder(BorderFactory.createTitledBorder("Change password"));
         passwordPanel.add(passwordField);
         passwordPanel.add(changePasswordButton);
+        passwordPanel.setMaximumSize(new Dimension(200,80));
+
 
 
 
@@ -439,6 +444,16 @@ public class Main {
                 transitionLoginView(frame);
 
             } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        refreshButton.addActionListener(e-> {
+            try {
+                frame.getContentPane().removeAll();
+                createUserSettingsView(frame);
+                frame.revalidate();
+                frame.repaint();
+            } catch (FileNotFoundException ex) {
                 throw new RuntimeException(ex);
             }
         });
