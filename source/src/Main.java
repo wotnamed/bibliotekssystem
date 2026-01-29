@@ -6,9 +6,9 @@ import java.nio.channels.AlreadyBoundException;
 import java.util.ArrayList;
 
 public class Main { // maybe JFrame frame should be located here?
-    Library library = new Library();
-    Authenticator auth = new Authenticator();
-    public User activeUser;
+    private Library library = new Library();
+    private Authenticator auth = new Authenticator();
+    private User activeUser;
     public Main() throws FileNotFoundException {
     }
 

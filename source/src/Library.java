@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Library {
-    FileManager fileManager = new FileManager();
-    ArrayList<Book> bookList = fileManager.loadBookData();
-    ArrayList<User> userList = fileManager.loadUserData();
-    ArrayList<Loan> loanList = fileManager.loadLoanData();
+    private FileManager fileManager = new FileManager();
+    private ArrayList<Book> bookList = fileManager.loadBookData();
+    private ArrayList<User> userList = fileManager.loadUserData();
+    private ArrayList<Loan> loanList = fileManager.loadLoanData();
 
     public Library() throws FileNotFoundException {
     }
