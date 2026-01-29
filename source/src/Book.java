@@ -6,7 +6,7 @@ public class Book {
     protected String title;
     protected String pages;
 
-    Book(String author, String year, String language, String ISBN, String title, String pages){
+    public Book(String author, String year, String language, String ISBN, String title, String pages){
         this.author = author;
         this.year = year;
         this.language = language;
