@@ -1,2 +1,1 @@
-username:test|password:test|userid:38fab27f-3bd3-4108-84f0-866e83a95ac7
-username:admin|password:admin|userid:9632a951-21db-439c-aa96-f6d02c894c1d
+username:admin|password:admin|userid:ad3d5cd1-29d4-4330-8434-4091c95ca083

@@ -15,10 +15,26 @@ public class Library {
 
     public ArrayList<Book> getBooklist(){return bookList;}
 
-    public void createNewCustomer(User user) throws IOException, IllegalArgumentException, AlreadyBoundException {
+    public void changeUserPassword(String userID, String newPassword) throws IOException {
+        for (User user : userList){
+            if (Objects.equals(userID, user.getUserID())){
+                User oldUser = user;
+                fileManager.removeUser(user.getUserID());
+                oldUser.setPassword(newPassword);
+                fileManager.saveUserToFile(oldUser);
+                updateUserData();
+            }
+        }
+    }
+
+    public void createNewCustomer(String username, String password) throws IOException, IllegalArgumentException, AlreadyBoundException {
+        User user = new User(username, password);
+        // Vulnerability: users with equal userID:s...
+        // No empty usernames or passwords
         if (Objects.equals(user.getUsername(), "") || Objects.equals(user.getPassword(), "")){
             throw new IllegalArgumentException();
         }
+        // No taken usernames
         for(User otherUser: userList){
             if(Objects.equals(otherUser.getUsername(), user.getUsername())){
                 throw new AlreadyBoundException();
@@ -27,8 +43,21 @@ public class Library {
         userList.add(user);
         fileManager.saveUserToFile(user);
     }
+
+    public void deleteCustomer(User user) throws IOException {
+        ArrayList<Loan> userLoans = getUserLoans(user);
+        fileManager.removeUser(user.getUserID());
+        for (Loan loan : userLoans){
+            returnLoan(loan);
+        }
+    }
+
     public void updateLoanData() throws FileNotFoundException {
         loanList = fileManager.loadLoanData();
+    }
+
+    public void updateUserData() throws FileNotFoundException {
+        userList = fileManager.loadUserData();
     }
     public void loanBook(Book book, User user) throws FileNotFoundException, AssertionError {
         ArrayList<Loan> userLoans = getUserLoans(user);

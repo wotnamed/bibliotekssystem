@@ -85,8 +85,8 @@ public class FileManager {
 
     public void saveUserToFile(User user) throws IOException {
         try (FileWriter fw = new FileWriter(userPath, true);
-             BufferedWriter bw = new BufferedWriter(fw);
-             PrintWriter out = new PrintWriter(bw)){
+            BufferedWriter bw = new BufferedWriter(fw);
+            PrintWriter out = new PrintWriter(bw)){
 
             String userLine = "username:" + user.getUsername() +
                     "|password:" + user.getPassword() +

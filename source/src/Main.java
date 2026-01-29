@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 public class Main {
     Library library = new Library();
+    Authenticator auth = new Authenticator();
     public User activeUser;
     public Main() throws FileNotFoundException {
     }
@@ -30,6 +31,7 @@ public class Main {
         transitionLoginView(frame);
     }
     private void createLoginView(JFrame frame) throws FileNotFoundException {
+        library.updateUserData();
         frame.setTitle("Login Window");
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -63,7 +65,7 @@ public class Main {
         frame.setVisible(true);
 
         // load authentication
-        Authenticator auth = new Authenticator();
+        auth.updateUserList();
 
         loginButton.addActionListener(e -> {
             System.out.println("User: "+usernameField.getText());
@@ -115,7 +117,7 @@ public class Main {
         frame.setVisible(true);
         confirmButton.addActionListener( e -> {
             try {
-                library.createNewCustomer(new User(usernameField.getText(), passwordField.getText()));
+                library.createNewCustomer(usernameField.getText(), passwordField.getText());
                 System.out.println("Account created.");
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
@@ -215,12 +217,17 @@ public class Main {
         logOutButton.addActionListener( e ->{
             try {
                 transitionLoginView(frame);
+                activeUser = null;
             } catch (FileNotFoundException ex) {
                 throw new RuntimeException(ex);
             }
         });
         userSettingsButton.addActionListener(e ->{
-
+            try {
+                transitionUserSettingsView(frame);
+            } catch (FileNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
         });
     }
 
@@ -371,14 +378,84 @@ public class Main {
         });
     }
 
-    private void transitionUserSettingsView(JFrame frame){
+    private void transitionUserSettingsView(JFrame frame) throws FileNotFoundException {
         frame.getContentPane().removeAll();
         createUserSettingsView(frame);
         frame.revalidate();
         frame.repaint();
     }
 
-    private void createUserSettingsView(JFrame frame){
+    private void createUserSettingsView(JFrame frame) throws FileNotFoundException {
         // TODO: Create User setting screen and implement setting button on search screen
+        JPanel settingsPanel = new JPanel();
+        settingsPanel.setLayout(new BorderLayout());
+
+        JPanel headerPanel = new JPanel();
+        JLabel titleText = new JLabel("Settings");
+        frame.setTitle("Settings");
+        headerPanel.add(titleText);
+
+        JButton homePageButton = new JButton("Home");
+        headerPanel.add(homePageButton);
+
+        JPanel boxesContainer = new JPanel();
+        boxesContainer.setLayout(new BoxLayout(boxesContainer, BoxLayout.Y_AXIS));
+
+        settingsPanel.add(headerPanel, BorderLayout.NORTH);
+        settingsPanel.add(boxesContainer);
+        frame.add(settingsPanel);
+
+        homePageButton.addActionListener(e ->{
+            frame.getContentPane().removeAll();
+            createSearchView(frame);
+            frame.revalidate();
+            frame.repaint();
+        });
+
+        JPanel userPanel = new JPanel();
+        userPanel.setLayout(new BoxLayout(userPanel, BoxLayout.Y_AXIS));
+        userPanel.setBorder(BorderFactory.createTitledBorder("User details"));
+        userPanel.add(new JLabel("Username: " +activeUser.getUsername()));
+        userPanel.add(new JLabel("Password: " +activeUser.getPassword()));
+        userPanel.add(new JLabel("UserID: " +activeUser.getUserID()));
+        JButton deleteUserButton = new JButton("Delete Account");
+        userPanel.add(deleteUserButton);
+
+        JTextField passwordField = new JTextField(20);
+        JButton changePasswordButton = new JButton("Change password");
+
+        JPanel passwordPanel = new JPanel();
+        passwordPanel.setLayout(new BoxLayout(passwordPanel, BoxLayout.Y_AXIS));
+        passwordPanel.setBorder(BorderFactory.createTitledBorder("Change password"));
+        passwordPanel.add(passwordField);
+        passwordPanel.add(changePasswordButton);
+
+
+
+        deleteUserButton.addActionListener(e ->{
+            try {
+                library.deleteCustomer(activeUser);
+                activeUser = null;
+                transitionLoginView(frame);
+
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        changePasswordButton.addActionListener(e ->{
+            try {
+                library.changeUserPassword(activeUser.getUserID(), passwordField.getText());
+                auth.updateUserList();
+                activeUser = auth.getUser(activeUser.getUsername());
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        boxesContainer.add(userPanel);
+        boxesContainer.add(passwordPanel);
+
+
     }
 }
