@@ -9,14 +9,14 @@ public class Library {
     private ArrayList<LibraryItem> bookList;
     private ArrayList<User> userList;
     private ArrayList<Loan> loanList;
-    private simpleSearch simpleSearch;
+    private SimpleSearch simpleSearch;
 
     public Library(DataManager dataManager) throws FileNotFoundException {
         this.dataManager = dataManager;
         this.bookList = dataManager.loadLibraryItems();
         this.userList = dataManager.loadUserData();
         this.loanList = dataManager.loadLoanData();
-        this.simpleSearch = new simpleSearch();
+        this.simpleSearch = new SimpleSearch();
 
 
     }

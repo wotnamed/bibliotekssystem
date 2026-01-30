@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class simpleSearch {
+public class SimpleSearch {
     public ArrayList<LibraryItem> searchForLibraryItem(String search, ArrayList<LibraryItem> comparisonList){
         ArrayList<LibraryItem> results = new ArrayList<>();
         for (LibraryItem item : comparisonList){
