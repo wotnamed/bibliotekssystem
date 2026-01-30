@@ -1,3 +1,2 @@
 username:test|password:test|userid:cb7c4e0b-cd0c-4001-b379-bd781a0229a0
-username:admin|password:admin|userid:5d3a1043-9d6a-4969-a5da-3ee5055b71f4
-username:User|password:Sigma|userid:96078c0e-da23-4267-a593-487b3cb874b1
+username:admin|password:admin|userid:47706c9a-8607-4e0b-b255-222beed4e934

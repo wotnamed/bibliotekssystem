@@ -69,9 +69,12 @@ public class Main {
             if (auth.authCheck(usernameField.getText(), passwordField.getText())) {
                 transitionSearchView(frame);
                 activeUser = auth.getUser(usernameField.getText());
-                System.out.println("Logged in as " + activeUser.getUserID());
+                JOptionPane.showMessageDialog(frame, "Logged in as "+activeUser.getUsername(),
+                        "Success", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                System.out.println("Incorrect username or password!");
+                JOptionPane.showMessageDialog(frame, "Incorrect username or password!",
+                        "Failure", JOptionPane.ERROR_MESSAGE);
+
             }
         });
 
@@ -112,13 +115,16 @@ public class Main {
         confirmButton.addActionListener( e -> {
             try {
                 library.createNewCustomer(usernameField.getText(), passwordField.getText());
-                System.out.println("Account created.");
+                JOptionPane.showMessageDialog(frame, "Account created.",
+                        "Success", JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             } catch (AlreadyBoundException ex) {
-                System.out.println("Username taken!");
+                JOptionPane.showMessageDialog(frame, "Username taken!",
+                        "Failure", JOptionPane.ERROR_MESSAGE);
             } catch (IllegalArgumentException ex) {
-                System.out.println("Username and password fields must not be empty!");
+                JOptionPane.showMessageDialog(frame, "Username and password fields must not be empty!",
+                        "Failure", JOptionPane.ERROR_MESSAGE);
             }
         });
 
@@ -180,7 +186,7 @@ public class Main {
         JPanel boxesContainer = new JPanel();
         boxesContainer.setLayout(new BoxLayout(boxesContainer, BoxLayout.Y_AXIS));
 
-        addTitledBoxesForLibraryItemInList(library.getLibraryItems(), boxesContainer);
+        addTitledBoxesForLibraryItemInList(library.getLibraryItems(), boxesContainer, frame);
 
         JScrollPane scrollPane = new JScrollPane(boxesContainer);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -191,7 +197,7 @@ public class Main {
         // Search method, thank you!
         searchButton.addActionListener(e -> {
             boxesContainer.removeAll();
-            addTitledBoxesForLibraryItemInList(library.searchForBook(searchField.getText()), boxesContainer);
+            addTitledBoxesForLibraryItemInList(library.searchForBook(searchField.getText()), boxesContainer, frame);
             frame.revalidate();
             frame.repaint();
         });
@@ -226,7 +232,7 @@ public class Main {
         });
     }
 
-    private JPanel createItemBox(LibraryItem item) {
+    private JPanel createItemBox(LibraryItem item, JFrame frame) {
         JPanel boxPanel = new JPanel();
         boxPanel.setLayout(new BoxLayout(boxPanel, BoxLayout.Y_AXIS));
         boxPanel.setBorder(BorderFactory.createTitledBorder(item.getTitle()));
@@ -257,11 +263,13 @@ public class Main {
         borrowButton.addActionListener( e->{
             try {
                 library.loanBook(item, activeUser);
-                System.out.println("Book '"  + item.getTitle() + "' successfully borrowed.");
+                JOptionPane.showMessageDialog(frame, "Book '"  + item.getTitle() + "' successfully borrowed.",
+                        "Success", JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             } catch (AssertionError ex) {
-                System.out.println("You're already borrowing this book!");
+                JOptionPane.showMessageDialog(frame, "You're already borrowing this book!",
+                        "Failure", JOptionPane.ERROR_MESSAGE);
             }
         });
 
@@ -296,9 +304,9 @@ public class Main {
         return boxPanel;
     }
 
-    private void addTitledBoxesForLibraryItemInList(ArrayList<LibraryItem> itemList, JPanel boxesContainer){
+    private void addTitledBoxesForLibraryItemInList(ArrayList<LibraryItem> itemList, JPanel boxesContainer, JFrame frame){
         for(LibraryItem item : itemList){
-        boxesContainer.add(createItemBox(item));
+        boxesContainer.add(createItemBox(item, frame));
         boxesContainer.add(Box.createRigidArea(new Dimension(0, 15)));
         }
     }
@@ -452,11 +460,14 @@ public class Main {
                 library.changeUserPassword(activeUser.getUserID(), passwordField.getText());
                 auth.updateUserList();
                 activeUser = auth.getUser(activeUser.getUsername());
-                System.out.println("Password changed.");
+                JOptionPane.showMessageDialog(frame, "Password changed.",
+                        "Success", JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             } catch (IllegalArgumentException ex) {
-                System.out.println("Password field must not be empty!");
+                JOptionPane.showMessageDialog(frame, "Password field must not be empty!",
+                        "Failure", JOptionPane.ERROR_MESSAGE);
+
             }
         });
 
