@@ -9,12 +9,15 @@ public class Library {
     private ArrayList<LibraryItem> bookList;
     private ArrayList<User> userList;
     private ArrayList<Loan> loanList;
+    private simpleSearch simpleSearch;
 
     public Library(DataManager dataManager) throws FileNotFoundException {
         this.dataManager = dataManager;
         this.bookList = dataManager.loadLibraryItems();
         this.userList = dataManager.loadUserData();
         this.loanList = dataManager.loadLoanData();
+        this.simpleSearch = new simpleSearch();
+
 
     }
 
@@ -97,12 +100,6 @@ public class Library {
     }
 
     public ArrayList<LibraryItem> searchForBook(String search){
-        ArrayList<LibraryItem> results = new ArrayList<>();
-        for (LibraryItem item : bookList){
-            if (item.matchesSearch(search)){
-                results.add(item);
-            }
-        }
-        return results;
+        return simpleSearch.searchForLibraryItem(search, bookList);
     }
 }
