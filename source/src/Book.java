@@ -21,7 +21,7 @@ public class Book implements LibraryItem{
     public LinkedHashMap<String, String> getDisplayInfo() {
         LinkedHashMap<String, String> info = new LinkedHashMap<>();
         info.put("Year: ", this.getYear());
-        info.put("Author: ", this.getISBN());
+        info.put("Author: ", this.getAuthor());
         info.put("Title: ", this.getTitle());
         info.put("Languages: ", this.getLanguage());
         info.put("ISBN: ", this.getISBN());
@@ -30,7 +30,7 @@ public class Book implements LibraryItem{
     }
 
     public boolean matchesSearch(String search){
-        return title.contains(search) || author.contains(search);
+        return title.contains(search) || author.contains(search) || ISBN.contains(search);
     }
     public String getAuthor() {
         return author;
