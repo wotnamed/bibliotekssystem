@@ -6,7 +6,7 @@ import java.nio.channels.AlreadyBoundException;
 import java.util.ArrayList;
 
 public class Main {
-    private DataManager fileManager = new FileManager();// maybe JFrame frame should be located here?
+    private DataManager fileManager = new FileManagerManager();// maybe JFrame frame should be located here?
     private Library library = new Library(fileManager);
     private Authenticator auth = new Authenticator();
     private User activeUser;

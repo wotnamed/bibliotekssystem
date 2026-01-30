@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class Authenticator {
-    private DataManager dataManager = new FileManager();
+    private DataManager dataManager = new FileManagerManager();
     private ArrayList<User> userlist = dataManager.loadUserData();
 
     //Needed when user is removed as to not enable invalid login
