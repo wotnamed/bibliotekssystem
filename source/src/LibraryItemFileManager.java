@@ -4,9 +4,12 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+//Needs to be updated in case of more LibraryItems
 public class LibraryItemFileManager extends FileManagerMaker{
-    private static final String basePath = Paths.get("").toAbsolutePath() + File.separator + "resources" + File.separator;
-    private static final String bookPath = basePath + "books_the_library_system.txt";
+    private String path;
+    LibraryItemFileManager(String path){
+        super(path);
+    }
 
     public LibraryItem bookMaker(String[] bookList) {
         String title = bookList[0].substring(bookList[0].indexOf(":") + 1).trim();
@@ -20,7 +23,7 @@ public class LibraryItemFileManager extends FileManagerMaker{
     }
 
     public ArrayList<LibraryItem> loadLibraryItems() throws FileNotFoundException {
-        File bookfile = new File(bookPath);
+        File bookfile = new File(path);
         ArrayList<LibraryItem> bookList = new ArrayList<>();
         try (Scanner bookScanner = new Scanner(bookfile)) {
             while (bookScanner.hasNextLine()) {

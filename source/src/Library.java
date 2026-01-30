@@ -17,8 +17,6 @@ public class Library {
         this.userList = dataManager.loadUserData();
         this.loanList = dataManager.loadLoanData();
         this.simpleSearch = new SimpleSearch();
-
-
     }
 
     public ArrayList<LibraryItem> getLibraryItems(){return bookList;}

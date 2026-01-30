@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class UserFileManager extends FileManagerMaker{
-    private final static String basePath = Paths.get("").toAbsolutePath() + File.separator + "resources" + File.separator;
-    private static final String userPath = basePath + "users.txt";
+    private String path;
+    UserFileManager(String path){
+        super(path);
+    }
 
     public User userMaker(String[] userList){
         String username = userList[0].substring(userList[0].indexOf(":") + 1).trim();
@@ -16,7 +18,7 @@ public class UserFileManager extends FileManagerMaker{
     }
 
     public ArrayList<User> loadUserData() throws FileNotFoundException {
-        File userFile = new File(userPath);
+        File userFile = new File(path);
         ArrayList<User> userList = new ArrayList<>();
 
         try (Scanner userScanner = new Scanner(userFile)) {
@@ -31,7 +33,7 @@ public class UserFileManager extends FileManagerMaker{
     }
 
     public void saveUserToFile(User user) throws IOException {
-        try (FileWriter fw = new FileWriter(userPath, true);
+        try (FileWriter fw = new FileWriter(path, true);
              BufferedWriter bw = new BufferedWriter(fw);
              PrintWriter out = new PrintWriter(bw)){
 
@@ -46,7 +48,7 @@ public class UserFileManager extends FileManagerMaker{
     public void removeUser(String userID) throws IOException {
         ArrayList<User> users = loadUserData();
         users.removeIf(user -> user.getUserID().equals(userID));
-        clearFile(userPath);
+        clearFile(path);
         for(User user: users){
             saveUserToFile(user);
         }
