@@ -6,7 +6,6 @@ import java.util.Scanner;
 
 //Needs to be updated in case of more LibraryItems
 public class LibraryItemFileManager extends FileManagerMaker{
-    private String path;
     LibraryItemFileManager(String path){
         super(path);
     }

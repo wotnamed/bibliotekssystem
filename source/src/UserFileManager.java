@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class UserFileManager extends FileManagerMaker{
-    private String path;
     UserFileManager(String path){
         super(path);
     }

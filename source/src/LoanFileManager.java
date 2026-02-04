@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class LoanFileManager extends FileManagerMaker{
-    private String path;
     LoanFileManager(String path){
         super(path);
     }

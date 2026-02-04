@@ -3,9 +3,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class FileManagerManager implements DataManager {
-    private UserFileManager userFileManager = new UserFileManager("books_the_library_system.txt");
+    private UserFileManager userFileManager = new UserFileManager("users.txt");
     private LoanFileManager loanFileManager = new LoanFileManager("loans.txt");
-    private LibraryItemFileManager libraryItemFileManager = new LibraryItemFileManager("users.txt");
+    private LibraryItemFileManager libraryItemFileManager = new LibraryItemFileManager("books_the_library_system.txt");
 
     public ArrayList<LibraryItem> loadLibraryItems() throws FileNotFoundException {
         return libraryItemFileManager.loadLibraryItems();

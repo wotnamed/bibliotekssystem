@@ -5,7 +5,7 @@ import java.nio.file.Paths;
 
 
 public abstract class FileManagerMaker {
-    private String path;
+    protected String path;
     public FileManagerMaker(String path){
         this.path = Paths.get("").toAbsolutePath() + File.separator + "resources" + File.separator + path;
     }
